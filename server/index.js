@@ -26,30 +26,41 @@ pgClient.on("error", err => {
 
 // Create table using client
 pgClient.query(
-  "CREATE TABLE IF NOT EXISTS recipes(recipe_id SERIAL PRIMARY KEY, recipe_name VARCHAR(20) NOT NULL, recipe_description VARCHAR(20), food_category VARCHAR(20) NOT NULL, price MONEY NOT NULL, country VARCHAR(20))",
+  "CREATE TABLE IF NOT EXISTS recipes(recipe_id SERIAL PRIMARY KEY, recipe_name VARCHAR(20) NOT NULL, recipe_description VARCHAR(100), food_category VARCHAR(20) NOT NULL, price MONEY NOT NULL, country VARCHAR(50))",
   (err, res) => {
     console.log(err, res);
-    pgClient.end();
+    // pgClient.end();
   }
 );
 
 // Express Routes for backend Api calls
-app.get('/', (req, res) => {
-  res.send('Hello api data is coming...')
+app.get("/", (req, res) => {
+  res.send("Hello api data is coming...");
 });
 
-app.get('/api/getRecipes', async (req, res) => {
-  const recipes = await pgClient.query('SELECT * from recipes ORDER BY recipe_id ASC');
+app.get("/api/getRecipes", async (req, res) => {
+  const recipes = await pgClient.query(
+    "SELECT * from recipes ORDER BY recipe_id ASC"
+  );
+  console.log(recipes);
   res.send(recipes.rows);
 });
 
-app.post('/api/addRecipe', async (req, res) => {
-  const { recipe_name, recipe_description, food_category, price, country } = request.body
-  const { recipe } = await pgClient.query('INSERT INTO recipes (recipe_name, recipe_description, food_category, price, country ) VALUES ($1, $2, $3, $4, $5)', [recipe_name, recipe_description, food_category, price, country]);
-  res.status(201).send(recipe[0])
+app.post("/api/addRecipe", async (req, res) => {
+  const {
+    recipe_name,
+    recipe_description,
+    food_category,
+    price,
+    country
+  } = req.body;
+  const recipe = await pgClient.query(
+    "INSERT INTO recipes (recipe_name, recipe_description, food_category, price, country ) VALUES ($1, $2, $3, $4, $5)",
+    [recipe_name, recipe_description, food_category, price, country]
+  );
+  res.status(201).send(recipe[0]);
 });
 
 app.listen(5000, err => {
-  console.log('Server is running');
-})
-
+  console.log("Server is running");
+});
