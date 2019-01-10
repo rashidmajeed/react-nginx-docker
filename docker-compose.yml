@@ -2,16 +2,25 @@ version: "3"
 services:
   postgres:
     container_name: postgresdb
-      image: "postgres:latest"
-      enviornment:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: postgres
-        POSTGRES_PASSWORD: postgres_password
-      ports:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
       - "5432:5432"
-      restart: always
-
-  server:
+    restart: always
+  nginx:
+    container_name: nginx-dev
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3050:80"
+    depends_on:
+      - client
+  api:
     container_name: node-server
     restart: always
     build:
@@ -28,8 +37,9 @@ services:
       - PG_DATABASE=postgres
       - PG_PASSWORD=postgres_password
       - PG_PORT=5432
-    ports: 
+    ports:
       - "5000:5000"
+
   client:
     container_name: react-client
     restart: always
@@ -42,5 +52,4 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - server
-  
+      - api
