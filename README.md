@@ -1,6 +1,6 @@
 # Dockerized node-react-postgresql App
 
-This project demonstrates how docker can be used to run node, postgresql, react in containers. nginx is for proxy to backend api and client sie routes.
+This project demonstrates how docker can be used to run node, postgresql, react in containers. nginx is for proxy to backend api and client side routes.
 
 ## Screenshots for the project
 ![recipe1](https://user-images.githubusercontent.com/21228768/50936601-99c18500-1470-11e9-8c47-187773b1385c.jpg)
@@ -15,8 +15,7 @@ File `docker-compose.yml` is built in a way that creating images of client, serv
 
 ## Build and run command
 
-docker-compose build
-docker-compose up
+`Build: docker-compose.yml`   `Run: docker-compose.yml`
 
 All the containers will be run and user can browse at
 http://localhost:3000
